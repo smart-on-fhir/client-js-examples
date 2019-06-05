@@ -6,15 +6,16 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <title>Static Template</title>
         <script src="https://docs.smarthealthit.org/client-js/build/fhir-client.js"></script>
+    </head>
+    <body>
+        Loading...
         <script>
             localStorage.debug = "*";
             FHIR.oauth2.authorize({
                 clientId: "my_web_app",
-                scope: "patient/*.read"
+                scope: "launch/patient launch/encounter openid fhirUser patient/*.read",
+                iss: "https://launch.smarthealthit.org/v/r3/sim/eyJoIjoiMSJ9/fhir"
             });
         </script>
-    </head>
-    <body>
-        Loading...
     </body>
 </html>

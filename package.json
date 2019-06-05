@@ -1,0 +1,20 @@
+{
+  "name": "client-js-examples",
+  "version": "1.0.0",
+  "description": "Contains examples of how to use the client-js library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smart-on-fhir/client-js-examples.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/smart-on-fhir/client-js-examples/issues"
+  },
+  "homepage": "https://github.com/smart-on-fhir/client-js-examples#readme"
+}

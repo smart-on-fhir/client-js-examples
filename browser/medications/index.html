@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Static Template</title>
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://combinatronics.com/smart-on-fhir/client-js/master/build/fhir-client.js"></script>
+    <script src="../app.js"></script>
+  </head>
+  <body>
+    <div class="cell full">
+      <h4>Patient Medications</h4>
+      <pre id="output">Loading...</pre>
+    </div>
+    <script type="text/javascript">
+      var render = createRenderer("output");
+
+      function getMedicationName(medCodings) {
+        var coding = medCodings.find(function(c){
+          return c.system == "http://www.nlm.nih.gov/research/umls/rxnorm";
+        });
+        return coding && coding.display || "Unnamed Medication(TM)";
+      }
+
+      FHIR.oauth2.init({
+        // The client_id that you should have obtained after registering a client at the EHR.
+        clientId: "my_web_app",
+
+        // The scopes that you request from the EHR
+        scope: [
+          "launch/patient",  // request the current patient
+          "openid fhirUser",  // Get the current user
+          "online_access",   // request a refresh token
+          "patient/*.read",  // read patient data
+        ].join(" "),
+
+        redirectUri: "./index.html",
+
+        iss: "https://launch.smarthealthit.org/v/r3/sim/eyJrIjoiMSIsImIiOiJzbWFydC04ODg4ODA0In0/fhir"
+      })
+      .then(function(client) {
+        
+        // Get MedicationRequests for the selected patient
+        client.request("/MedicationRequest?patient=" + client.patient.id, {
+          resolveReferences: [ "medicationReference" ],
+          graph: true
+        })
+          
+        // Reject if no MedicationRequests are found
+        .then(function(data) {
+          if (!data.entry || !data.entry.length) {
+            throw new Error("No medications found for the selected patient");
+          }
+          return data.entry;
+        })
+        
+        // Build an array of medication names
+        .then(function(entries) {
+          return entries.map(function(item) {
+            return getMedicationName(
+              client.getPath(item, "resource.medicationCodeableConcept.coding") ||
+              client.getPath(item, "resource.medicationReference.code.coding")
+            );
+          });
+        })
+
+        // Render the list
+        .then(render);
+      })
+      
+      // Render any errors
+      .catch(render);
+    </script>
+  </body>
+</html>

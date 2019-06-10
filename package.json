@@ -1,5 +1,5 @@
 {
-  "name": "client-js-examples",
+  "name": "fhir-client-browser-examples",
   "version": "1.0.0",
   "description": "Contains examples of how to use the client-js library",
   "main": "index.js",

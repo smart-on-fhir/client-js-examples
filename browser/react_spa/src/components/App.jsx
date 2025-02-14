@@ -8,8 +8,8 @@ export default function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/app" Component={Home} />
-                <Route path="/" Component={Launcher} />
+                <Route path="/client-js-examples/react_spa/app" Component={Home} />
+                <Route path="/client-js-examples/react_spa/" Component={Launcher} />
             </Routes>
         </BrowserRouter>
     );

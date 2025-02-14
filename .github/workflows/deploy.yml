@@ -18,20 +18,20 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
+    #   - name: Set up Node.js
+    #     uses: actions/setup-node@v4
+    #     with:
+    #       node-version: 22
+    #       cache: npm          
 
-      - name: Install Dependencies
-        run: npm install
+    #   - name: Install Dependencies
+    #     run: npm install
 
-      - name: Build Vite App
-        run: |
-          cd browser/ts_react_spa
-          npm ci
-          npm run build
+    #   - name: Build Vite App
+    #     run: |
+    #       cd browser/ts_react_spa
+    #       npm ci
+    #       npm run build
 
       - name: Prepare Deployment Folder
         run: |

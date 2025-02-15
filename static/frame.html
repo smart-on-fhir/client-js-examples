@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Static Template</title>
+        <script src="https://cdn.jsdelivr.net/npm/fhirclient/build/fhir-client.js"></script>
+    </head>
+    <body>
+        IFrame: <br />
+        <iframe
+            width="800"
+            height="600"
+            name="myFrame"
+            src=""
+            style="border: 1px solid #000"
+        ></iframe>
+        <script>
+            FHIR.oauth2.authorize({
+                iss:
+                    "https://launch.smarthealthit.org/v/r4/sim/eyJoIjoiMSIsImoiOiIxIn0/fhir",
+                redirectUri: "./app.html",
+                clientId: "whatever",
+                target: "myFrame",
+                scope: "launch/patient user/*read patient/*read openid fhirUser"
+            });
+        </script>
+    </body>
+</html>

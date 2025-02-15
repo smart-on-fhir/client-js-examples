@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Static Template</title>
+        <script src="https://cdn.jsdelivr.net/npm/fhirclient/build/fhir-client.js"></script>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            #layer-popup {
+                border: 1px solid #999;
+                padding: 10px;
+                width: 820px;
+                height: 650px;
+                border-radius: 4px;
+                transition: all 0.6s;
+                background: #f6f6f6;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(0);
+                max-height: 90vh;
+                max-width: 90vw;
+                opacity: 0;
+            }
+            #layer-popup iframe {
+                border: 1px solid #999;
+                background: #fff;
+                position: absolute;
+                top: 40px;
+                left: 10px;
+                right: 10px;
+                bottom: 10px;
+                width: calc(100% - 20px);
+                height: calc(100% - 50px);
+            }
+            #layer-popup header {
+                display: block;
+                height: 30px;
+            }
+            #layer-popup.open {
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                opacity: 1;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="layer-popup">
+            <header>My PopUp</header>
+            <iframe name="myPopupFrame" id="myPopupFrame" src=""></iframe>
+        </div>
+        <script>
+            function openPopup() {
+                return new Promise(function(resolve) {
+                    document
+                        .getElementById("layer-popup")
+                        .classList.add("open");
+                    document.getElementById("myPopupFrame").src = "about:blank";
+                    setTimeout(function() {
+                        resolve("myPopupFrame");
+                    }, 1000);
+                });
+            }
+            FHIR.oauth2.authorize({
+                iss:
+                    "https://launch.smarthealthit.org/v/r4/sim/eyJoIjoiMSIsImoiOiIxIn0/fhir",
+                redirectUri: "./app.html",
+                clientId: "whatever",
+                target: openPopup,
+                completeInTarget: true,
+                scope: "launch/patient user/*read patient/*read openid fhirUser"
+            });
+        </script>
+    </body>
+</html>

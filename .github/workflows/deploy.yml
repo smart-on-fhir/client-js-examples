@@ -39,7 +39,7 @@ jobs:
           cp -r browser/static public/
           cp -r browser/ts_react_spa/dist public/ts_react_spa
           cp -r browser/react_spa/dist public/react_spa
-          cp browser/static/index.html public/ || true
+          cp browser/index.html public/ || true
           # cp browser/app.js public/ || true
           # cp browser/style.css public/ || true
 

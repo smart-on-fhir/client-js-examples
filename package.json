@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/smart-on-fhir/client-js-examples/issues"
   },
-  "homepage": "https://github.com/smart-on-fhir/client-js-examples#readme"
+  "homepage": "https://github.com/smart-on-fhir/client-js-examples#readme",
+  "dependencies": {
+    "fhirclient": "^2.6.0"
+  }
 }

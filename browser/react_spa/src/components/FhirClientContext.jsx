@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { oauth2 as SMART } from "fhirclient";
-import Client from "fhirclient/lib/Client";
+import { createContext, useContext, useEffect, useState } from "react";
+import { ready } from "fhirclient/browser";
+import Client from "fhirclient/Client";
 
 export const FhirClientContext = createContext({
     /** @type {Client|null} */
@@ -18,7 +18,7 @@ export function FhirClientProvider({ children })
     const [client    , setClient    ] = useState(null)
 
     useEffect(() => {
-        SMART.ready().then(
+        ready().then(
             // @ts-ignore
             (client) => setClient(client),
             (error ) => setError(error)

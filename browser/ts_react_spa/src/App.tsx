@@ -1,5 +1,5 @@
 import { Coding, HumanName, MedicationRequest, Patient } from "fhir/r4";
-import { getPath } from "fhirclient/lib/lib";
+import { getPath } from "fhirclient/lib";
 
 
 function getMedicationName(medCodings: Coding[] = []) {

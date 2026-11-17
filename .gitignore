@@ -59,3 +59,10 @@ typings/
 
 # next.js build output
 .next
+
+# Local symlinks to a client-js build, for testing
+/fhir-client.js
+/browser/static/fhir-client.js
+
+# macOS
+.DS_Store

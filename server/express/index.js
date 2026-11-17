@@ -1,6 +1,6 @@
-const smart   = require("fhirclient");
-const session = require("express-session");
-const app     = require("express")();
+const { smart } = require("fhirclient/node");
+const session   = require("express-session");
+const app       = require("express")();
 
 
 // The SMART state is stored in a session. If you want to clear your session
@@ -32,27 +32,32 @@ async function handler(client, res) {
 // =============================================================================
 // LAUNCHING
 // =============================================================================
-// 1. If you remove the iss options and request /launch it will throw because the FHIR service url is not known!
-// 2. If an EHR calls it, it will append "launch" and "state" parameters. Try
-//    it by loading /launch?iss=https://launch.smarthealthit.org/v/r3/fhir&launch=eyJhIjoiMSIsImciOiIxIn0
-// 3. If you only add an "iss" url parameter (no "launch"), you are doing a
-//    "dynamic" standalone launch. The app cannot obtain a launch context but
-//    it is still useful to be able to do that. In addition, the SMART Sandbox
-//    can be used to build a standalone launch url that contains embedded launch
-//    context which may be perfect for previewing you app. For example load this
-//    to launch the app with Angela Montgomery from DSTU-2:
-//    /launch?iss=https://launch.smarthealthit.org/v/r2/sim/eyJrIjoiMSIsImIiOiJzbWFydC03Nzc3NzA1In0/fhir
-// 4. We have an "iss" authorize option to make this do standalone launch by
-//    default. In this case /launch will not throw. Note that the "iss" url
-//    parameter takes precedence over the iss option, so the app will still be
-//    launch-able from an EHR.
-// 5. If an open server is passed as an "iss" option, or as "iss" url parameter,
-//    no authorization attempt will be made and we will be redirected to the
-//    redirect_uri (in this case we don't have launch context and there is no
-//    selected patient so we show all patients instead). Try it: /launch?iss=https://r3.smarthealthit.org
-// 6. Finally, a "fhirServiceUrl" parameter can be passed as option or as url
-//    parameter. It is like "iss" but will bypass the authorization (only useful
-//    in testing and development). Example: /launch?fhirServiceUrl=https://launch.smarthealthit.org/v/r3/fhir
+// 1. The "iss" option in smartSettings preconfigures the app to work with
+//    that server. Loading /launch makes a standalone launch against it.
+// 2. An EHR launches the app by loading /launch with "iss" and "launch" url
+//    parameters. Because this app is preconfigured with an "iss" option, the
+//    "iss" url parameter must match it, or authorize() throws. This prevents a
+//    crafted link from making the app authorize against a different server.
+//    To accept launches from several EHRs, pass an array of settings with
+//    "issMatch" instead (see
+//    http://docs.smarthealthit.org/client-js/open_servers#2-using-multiple-launch-configurations).
+// 3. If you remove the "iss" option, the server must come from the url:
+//    - /launch with no "iss" url parameter throws, because the FHIR server is
+//      not known.
+//    - /launch?iss=... without "launch" makes a "dynamic" standalone launch
+//      against that server. The app cannot obtain a launch context, but the
+//      SMART Sandbox can build an "iss" url that has the launch context
+//      embedded, which is perfect for previewing your app. For example, to
+//      launch the app with Angela Montgomery from DSTU-2:
+//      /launch?iss=https://launch.smarthealthit.org/v/r2/sim/eyJrIjoiMSIsImIiOiJzbWFydC03Nzc3NzA1In0/fhir
+//    - If "iss" is an open server, no authorization attempt is made and we are
+//      redirected to the redirect_uri (there is no launch context and no
+//      selected patient, so we show all patients instead):
+//      /launch?iss=https://r3.smarthealthit.org
+// 4. Finally, a "fhirServiceUrl" option or url parameter is like "iss" but
+//    bypasses the authorization (only useful in testing and development). It
+//    is ignored if "iss" is set. Example:
+//    /launch?fhirServiceUrl=https://launch.smarthealthit.org/v/r3/fhir
 app.get("/launch", (req, res, next) => {
     smart(req, res).authorize(smartSettings).catch(next);
 });

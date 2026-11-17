@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { oauth2 as SMART } from "fhirclient";
+import { authorize } from "fhirclient/browser";
 
 /**
  * Typically the launch page is an empty page with a `SMART.authorize`
@@ -13,12 +13,15 @@ import { oauth2 as SMART } from "fhirclient";
 export default function Launcher() {
 
     /**
-     * This is configured to make a Standalone Launch, just in case it
-     * is loaded directly. An EHR can still launch it by passing `iss`
-     * and `launch` url parameters
+     * This is configured to make a Standalone Launch against the server
+     * given in the `iss` option. Because of that option, the app only
+     * works with that server: if an EHR launches it with a different `iss`
+     * url parameter, `authorize` throws. To support EHR launch from any
+     * server, remove the `iss` option. To support several known servers,
+     * pass an array of options with `issMatch` instead.
      */
     useEffect(() => {
-        SMART.authorize({
+        authorize({
             clientId: "my-client-id",
             scope: "launch launch/patient patient/read offline_access",
             redirectUri: "./app",

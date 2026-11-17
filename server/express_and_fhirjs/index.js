@@ -1,7 +1,7 @@
-const smart   = require("fhirclient");
-const session = require("express-session");
-const fhirJs  = require("fhir.js");
-const app     = require("express")();
+const { smart } = require("fhirclient/node");
+const session   = require("express-session");
+const fhirJs    = require("fhir.js");
+const app       = require("express")();
 
 // The SMART state is stored in a session. If you want to clear your session
 // and start over, you will have to delete your "connect.sid" cookie!

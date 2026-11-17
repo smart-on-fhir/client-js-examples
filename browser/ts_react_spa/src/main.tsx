@@ -1,12 +1,12 @@
 import { createRoot }      from 'react-dom/client';
-import { oauth2 as SMART } from 'fhirclient';
+import FHIR                from 'fhirclient/browser';
 import App                 from './App.tsx';
 
 
 const root = createRoot(document.getElementById("root")!);
 
 
-SMART.init({
+FHIR.oauth2.init({
   iss        : "https://launch.smarthealthit.org/v/r3/sim/eyJoIjoiMSIsImIiOiJzbWFydC0xNjQyMDY4IiwiZSI6InNtYXJ0LVByYWN0aXRpb25lci03MTYxNDUwMiJ9/fhir",
   clientId   : "whatever",
   scope      : "launch/patient offline_access openid fhirUser"

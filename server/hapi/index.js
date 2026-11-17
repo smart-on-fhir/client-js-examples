@@ -1,6 +1,6 @@
 const Hapi = require("hapi");
 const Session = require("hapi-server-session");
-const smart = require("fhirclient/lib/entry/hapi");
+const { smart } = require("fhirclient/hapi");
 
 // The settings that we use to connect to our SMART on FHIR server
 const smartSettings = {

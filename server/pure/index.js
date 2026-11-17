@@ -1,6 +1,6 @@
-const FHIR = require("fhirclient");
+const { FhirClient } = require("fhirclient/node");
 
-const client = new FHIR.FhirClient("https://r4.smarthealthit.org");
+const client = new FhirClient("https://r4.smarthealthit.org");
 
 async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))

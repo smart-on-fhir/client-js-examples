@@ -5,11 +5,25 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <title>Static Template</title>
-        <script src="https://cdn.jsdelivr.net/npm/fhirclient/build/fhir-client.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/fhirclient@3/bundle/fhir-client.js"></script>
     </head>
     <body>
         <script>
-            FHIR.oauth2.authorize({
+            // This page takes the FHIR server from the "iss" url parameter, so the
+            // same app can be launched against different servers (the links on the
+            // examples index page use two different sandbox servers). If the page
+            // is opened without one, we add a default "iss" to keep this demo
+            // usable out of the box.
+            //
+            // Note that we do not pass an "iss" option to authorize(). If we did,
+            // the app would be preconfigured to work with that server only, and
+            // authorize() would throw if the url contained a different "iss".
+            var url = new URL(location.href);
+            if (!url.searchParams.has("iss")) {
+                url.searchParams.set("iss", "https://launch.smarthealthit.org/v/r3/sim/eyJoIjoiMSJ9/fhir");
+                location.replace(url.href);
+            }
+            else FHIR.oauth2.authorize({
 
                 // The client_id that you should have obtained after registering a client at
                 // the EHR.
@@ -23,11 +37,6 @@
                     "openid fhirUser",  // Get the current user
                     "patient/*.read"    // Read patient data
                  ].join(" "),
-
-                // Having this option means that it makes a standalone launch. This is to make
-                // this demo usable out of the box, but it can still do EHR launch if "iss" and
-                // "launch" url parameters are passed.
-                iss: "https://launch.smarthealthit.org/v/r3/sim/eyJoIjoiMSJ9/fhir",
 
                 // Typically, if your redirectUri points to the root of the current directory
                 // (where the launchUri is), you can omit this option because the default

@@ -1,0 +1,29 @@
+version: 2
+updates:
+  # One grouped PR per project per month. Note that the React demos are
+  # deployed from their committed dist/ folders, so after merging an update
+  # for them, run `npm run build` in that folder and commit the result
+  # (for react_spa, also copy dist/index.html to dist/app.html).
+  - package-ecosystem: npm
+    directories:
+      - /
+      - /browser/react_spa
+      - /browser/ts_react_spa
+    schedule:
+      interval: monthly
+    groups:
+      all:
+        patterns: ["*"]
+        update-types: [minor, patch]
+    commit-message:
+      prefix: chore
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: ci

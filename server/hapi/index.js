@@ -1,5 +1,5 @@
-const Hapi = require("hapi");
-const Session = require("hapi-server-session");
+const Hapi = require("@hapi/hapi");
+const Yar = require("@hapi/yar");
 const { smart } = require("fhirclient/hapi");
 
 // The settings that we use to connect to our SMART on FHIR server
@@ -10,6 +10,25 @@ const smartSettings = {
   iss:
     "https://launch.smarthealthit.org/v/r2/sim/eyJrIjoiMSIsImIiOiJzbWFydC03Nzc3NzA1In0/fhir"
 };
+
+// The SMART state is stored in the session. By default, fhirclient looks for a
+// `request.session` object. The @hapi/yar session plugin uses `request.yar`
+// instead, so we pass a small storage adapter to `smart()`.
+function getStorage({ request }) {
+  return {
+    async get(key) {
+      return request.yar.get(key);
+    },
+    async set(key, value) {
+      request.yar.set(key, value);
+      return value;
+    },
+    async unset(key) {
+      request.yar.clear(key);
+      return true;
+    }
+  };
+}
 
 // Just a simple function to reply back with some data (the current patient if
 // we know who he is, or all patients otherwise
@@ -31,10 +50,13 @@ const init = async () => {
   });
 
   await server.register({
-    plugin: Session,
+    plugin: Yar,
     options: {
-      expiresIn: 1000 * 60 * 5,
-      cookie: {
+      cookieOptions: {
+        // Used to encrypt the session cookie. Must be at least 32 characters.
+        // Use a real secret (for example, from an environment variable) in
+        // production!
+        password: "my secret that is at least 32 characters long",
         isSecure: false // never set to false in production
       }
     }
@@ -45,7 +67,7 @@ const init = async () => {
     method: "GET",
     path: "/",
     handler: async (request, h) => {
-      return smart(request, h).authorize(smartSettings);
+      return smart(request, h, getStorage).authorize(smartSettings);
     }
   });
 
@@ -54,11 +76,13 @@ const init = async () => {
     method: "GET",
     path: "/app",
     handler: async (request, h) => {
-      return smart(request, h).ready((client) => handler(client, h));
+      const client = await smart(request, h, getStorage).ready();
+      return handler(client, h);
     }
   });
 
   await server.start();
+  console.log("Server running at %s", server.info.uri);
 };
 
 init();

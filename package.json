@@ -18,11 +18,11 @@
   },
   "homepage": "https://github.com/smart-on-fhir/client-js-examples#readme",
   "dependencies": {
+    "@hapi/hapi": "^21.4.13",
+    "@hapi/yar": "^11.0.3",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
-    "fhirclient": "^3.0.2",
-    "hapi": "^18.1.0",
-    "hapi-server-session": "^5.1.2"
+    "fhirclient": "^3.0.2"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
